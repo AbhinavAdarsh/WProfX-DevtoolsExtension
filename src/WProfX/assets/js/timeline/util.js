@@ -413,8 +413,8 @@ util.reRunElements=function(){
   var button = document.createElement("button");
   button.id='capture';
   button.setAttribute('class','toolbar-button  btn-rerun');
-  button.setAttribute('title','Run WProfX');
-  var txtNode = document.createTextNode("Run WProfX");
+  button.setAttribute('title','Run WebViz');
+  var txtNode = document.createTextNode("Run WebViz");
   button.appendChild(txtNode);
   div.appendChild(button);
   document.getElementById("mainToolbar").appendChild(div);
