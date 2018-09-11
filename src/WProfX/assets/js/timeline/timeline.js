@@ -496,7 +496,7 @@ svg.prototype = {
     _setColor: function(active, color, lineId) {
         var size, state;
         if (active) {
-            size = "1.5px";
+            size = "1.3px";
             state = "visible";
             // bring line to the front
             //document.getElementById("graph").appendChild(document.getElementById(lineId));
