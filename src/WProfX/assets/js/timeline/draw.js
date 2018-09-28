@@ -242,17 +242,17 @@ class Draw{
 
   drawGraph() {
 
-      console.log("legacy>>>>>>>>>>",this.d_legacy);
+      //console.log("legacy>>>>>>>>>>",this.d_legacy);
       //criticalPathPieData();
 
 
       var pieData = {};
       var _this = this;
       this.d_legacy.critPath.forEach(function(objElem, index){
-        console.log("objElem >>>>>", objElem);
+        //console.log("objElem >>>>>", objElem);
         if(pieData[objElem.split("_")[0]] == null) pieData[objElem.split("_")[0]] = 0;
         var curr = _this.d_legacy.data.filter(d => d.id == objElem);
-        console.log("currrrrrrr >>>>>", curr);
+        //console.log("currrrrrrr >>>>>", curr);
         pieData[objElem.split("_")[0]] += (curr[0].endTime-curr[0].startTime);
       });
 
@@ -265,7 +265,7 @@ class Draw{
         pieNew.push(obj);
       }
 
-      console.log("legacy>>>>>>>>>>",pieNew);
+      //console.log("legacy>>>>>>>>>>",pieNew);
 
       nv.addGraph(function() {
         var chart = nv.models.pieChart()
