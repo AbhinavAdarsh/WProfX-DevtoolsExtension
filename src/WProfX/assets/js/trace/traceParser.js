@@ -165,8 +165,11 @@ class Analyze {
       // console.log('this.depsParent');
       // console.log(this.depsParent);
       const _draw = new Draw(this.output, false);
+      console.log("actual data. >>>>>>>>>>>>>>>>>>>>>>>",this.output);
       _draw.dataArrives(false);
       _draw.drawGraph();
+
+
       //util.downloadHandler(this.output, this.url);
       util.downloadHandler(this.output, 'output.json');
 
