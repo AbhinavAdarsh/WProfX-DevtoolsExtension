@@ -266,17 +266,65 @@ class Draw{
       }
 
       //console.log("legacy>>>>>>>>>>",pieNew);
+      var pieData_2 = {};
+      var _this = this;
+      this.d_legacy.critPath.forEach(function(objElem, index){
+        //console.log("objElem >>>>>", objElem);
+        if(pieData_2[objElem.split("_")[0]] == null) pieData_2[objElem.split("_")[0]] = 0;
+        var curr_2 = _this.d_legacy.data.filter(d => d.id == objElem);
+        //console.log("currrrrrrr >>>>>", curr);
+        pieData_2[objElem.split("_")[0]] += (curr_2[0].endTime-curr_2[0].startTime);
+      });
+
+      var pieNew_2 = [];
+
+      for(var key in pieData_2){
+        var obj_2 = {};
+        obj_2['label'] = key;
+        obj_2['value'] = pieData_2[key];
+        pieNew_2.push(obj_2);
+      }
 
       nv.addGraph(function() {
         var chart = nv.models.pieChart()
             .x(function(d) { return d.label })
             .y(function(d) { return d.value })
-            .showLabels(true);
+            .showLabels(true)
+            .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+            .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+            .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+            .donutRatio(0.45)     //Configure how big you want the donut hole size to be.
+            ;
 
           d3v3.select("#nvd3_svg_new")
               .datum(pieNew)
               .transition().duration(350)
               .call(chart);
+
+        return chart;
+      });
+
+      nv.addGraph(function() {
+        // Size of the pie-chart
+        //var width = 400, height = 400
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.label })
+            .y(function(d) { return d.value })
+            .showLabels(true)
+            .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+            .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+            .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+            .donutRatio(0.45)     //Configure how big you want the donut hole size to be.
+            // .width(width)
+            // .height(height)
+            ;
+
+          d3v3.select("#nvd3_svg_new_2")
+            .datum(pieNew)
+            .transition().duration(350)
+            .call(chart)
+            //.style({ 'width': width, 'height': height })
+            ;
 
         return chart;
       });

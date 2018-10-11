@@ -1307,6 +1307,27 @@ body {
     background-color: var(--toolbar-bg-color);
 }
 
+.pieChart{
+    display: flex;
+    height: 50%;
+    flex-direction: column;
+}
+
+.pieChart .content{
+    flex : 0.1;
+    text-align: center;
+}
+
+.pieChart .chartDiv{
+    display: flex;
+    flex : 0.9;
+}
+
+.pieChart .chartDiv svg{
+    overflow: visible;
+}
+
+
 iframe.extension {
     flex: auto;
     width: 100%;
