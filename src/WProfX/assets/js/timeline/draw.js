@@ -56,8 +56,10 @@ class Draw{
       var timeBegin = 10000;
       var timeEnd = 0;
       // console.log('this.data');
-      // console.log(this.data);
+      //console.log(this.data);
       this.data = JSON.parse(JSON.stringify(this.data));
+      //console.log("MMMMMMMMMMMM>>>>>>",this.data);
+
       var _this = this;
       this.data.forEach(function (elem, index)  {
           if (index === _this.data.length - 1) {
@@ -242,7 +244,7 @@ class Draw{
 
   drawGraph() {
 
-      //console.log("legacy>>>>>>>>>>",this.d_legacy);
+      console.log("legacy>>>>>>>>>>",this.data[this.data.length-1]);
       //criticalPathPieData();
 
 
@@ -266,24 +268,29 @@ class Draw{
       }
 
       //console.log("legacy>>>>>>>>>>",pieNew);
-      var pieData_2 = {};
-      var _this = this;
-      this.d_legacy.critPath.forEach(function(objElem, index){
-        //console.log("objElem >>>>>", objElem);
-        if(pieData_2[objElem.split("_")[0]] == null) pieData_2[objElem.split("_")[0]] = 0;
-        var curr_2 = _this.d_legacy.data.filter(d => d.id == objElem);
-        //console.log("currrrrrrr >>>>>", curr);
-        pieData_2[objElem.split("_")[0]] += (curr_2[0].endTime-curr_2[0].startTime);
-      });
+      //var pieData_2 = {'networking', 'loading + scripting'};
+      // var _this = this;
+      // this.d_legacy.critPath.forEach(function(objElem, index){
+      //   //console.log("objElem >>>>>", objElem);
+      //   if(pieData_2[objElem.split("_")[0]] == null) pieData_2[objElem.split("_")[0]] = 0;
+      //   var curr_2 = _this.d_legacy.data.filter(d => d.id == objElem);
+      //   //console.log("currrrrrrr >>>>>", curr);
+      //   pieData_2[objElem.split("_")[0]] += (curr_2[0].endTime-curr_2[0].startTime);
+      // });
 
       var pieNew_2 = [];
-
-      for(var key in pieData_2){
-        var obj_2 = {};
-        obj_2['label'] = key;
-        obj_2['value'] = pieData_2[key];
-        pieNew_2.push(obj_2);
-      }
+      pieNew_2.push({'label':'networking', 
+                      'value': this.data[this.data.length-1]['networkingTimeCp']
+                    });
+      pieNew_2.push({'label':'loading + scripting',
+                      'value': this.data[this.data.length-1]['scriptingTimeCp']+this.data[this.data.length-1]['loadingTimeCp']
+                    });
+      // for(var key in pieData_2){
+      //   var obj_2 = {};
+      //   obj_2['label'] = key;
+      //   obj_2['value'] = pieData_2[key];
+      //   pieNew_2.push(obj_2);
+      // }
 
       nv.addGraph(function() {
         var chart = nv.models.pieChart()
@@ -301,12 +308,18 @@ class Draw{
               .transition().duration(350)
               .call(chart);
 
+          // Chart title   
+          d3v3.select("#nvd3_svg_new_2")
+            .append("text")
+            .attr("x", -350)             
+            .attr("y", 350)
+            .attr("text-anchor", "middle")  
+            .text("Fig1. Networking vs Loading vs Scripting critical path Statistics");
+
         return chart;
       });
-
+      console.log(pieNew_2);
       nv.addGraph(function() {
-        // Size of the pie-chart
-        //var width = 400, height = 400
         var chart = nv.models.pieChart()
             .x(function(d) { return d.label })
             .y(function(d) { return d.value })
@@ -315,16 +328,21 @@ class Draw{
             .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
             .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
             .donutRatio(0.45)     //Configure how big you want the donut hole size to be.
-            // .width(width)
-            // .height(height)
             ;
 
           d3v3.select("#nvd3_svg_new_2")
-            .datum(pieNew)
+            .datum(pieNew_2)
             .transition().duration(350)
             .call(chart)
-            //.style({ 'width': width, 'height': height })
             ;
+
+          // Chart title   
+          d3v3.select("#nvd3_svg_new_2")
+            .append("text")
+            .attr("x", 350)             
+            .attr("y", 350)
+            .attr("text-anchor", "middle")  
+            .text("Fig2. Networking vs Loading+Scripting Statistics");
 
         return chart;
       });

@@ -469,6 +469,11 @@ input.dt-checkbox-themed:after {
     align-items: center;
 }
 
+.toolbar-shadow-new{
+    position: relative;
+}
+
+
 .toolbar-shadow.wrappable {
     flex-wrap: wrap;
     overflow: visible;
