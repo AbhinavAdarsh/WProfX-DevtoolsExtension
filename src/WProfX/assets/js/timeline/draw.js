@@ -277,7 +277,7 @@ class Draw{
       //   //console.log("currrrrrrr >>>>>", curr);
       //   pieData_2[objElem.split("_")[0]] += (curr_2[0].endTime-curr_2[0].startTime);
       // });
-
+      console.log("FOR BAR GRAPH >>>", this.d_legacy);
       var pieNew_2 = [];
       pieNew_2.push({'label':'networking', 
                       'value': this.data[this.data.length-1]['networkingTimeCp']
@@ -285,6 +285,28 @@ class Draw{
       pieNew_2.push({'label':'loading + scripting',
                       'value': this.data[this.data.length-1]['scriptingTimeCp']+this.data[this.data.length-1]['loadingTimeCp']
                     });
+      var bar_data = [
+                  {
+                    key: "S1",
+                    color: "#51A351",
+                    values:
+                    [      
+                      { x : 'A', y : 40 },
+                      { x : 'B', y : 30 },
+                      { x : 5,   y : 20 }  
+                    ]
+                  },
+                  {
+                    key: "S2",
+                    color: "#BD362F",
+                    values:
+                    [      
+                      { x : 'A', y : 60 },
+                      { x : 'B', y : 50 },
+                      { x : 5,   y : 70 } 
+                    ]
+                  }
+                ];
       // for(var key in pieData_2){
       //   var obj_2 = {};
       //   obj_2['label'] = key;
@@ -301,23 +323,61 @@ class Draw{
             .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
             .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
             .donutRatio(0.45)     //Configure how big you want the donut hole size to be.
+            .legendPosition("right")
             ;
 
-          d3v3.select("#nvd3_svg_new")
-              .datum(pieNew)
-              .transition().duration(350)
-              .call(chart);
+        // Insert text into the center of the donut
+        function centerText() {
+          return function() {
+            var svg = d3v3.select("#nvd3_svg_new");
+
+            var donut = svg.selectAll("g.nv-slice").filter(
+              function (d, i) {
+                return i == 0;
+              }
+            );
+           //Insert text inside donut
+            //console.log(donut);
+            donut.insert("text", "g")
+            .text("On")
+            .attr("class", "middle")
+            .attr("text-anchor", "middle")
+            .attr("dy", "-.55em")
+            .style("fill", "#000");
+
+            donut.insert("text", "g")
+            .text("Critical Path")
+            .attr("class", "middle")
+            .attr("text-anchor", "middle")
+            .attr("dy", ".85em")
+            .style("fill", "#000");
+      
+          }
+        }
+
+        d3v3.select("#nvd3_svg_new")
+            .datum(pieNew)
+            .transition().duration(350)
+            .call(chart)
+            .call(centerText());
+
+         //  g.append("text")
+         // .attr("text-anchor", "middle")
+         // .text("$" + totalValue);
 
           // Chart title   
-          d3v3.select("#nvd3_svg_new_2")
-            .append("text")
-            .attr("x", -350)             
-            .attr("y", 350)
-            .attr("text-anchor", "middle")  
-            .text("Fig1. Networking vs Loading vs Scripting critical path Statistics");
+          // d3v3.select("#nvd3_svg_new_2")
+          //   .append("text")
+          //   .attr("x", -350)             
+          //   .attr("y", 350)
+          //   .attr("text-anchor", "middle")  
+          //   .text("Fig1. Networking vs Loading vs Scripting critical path Statistics");
 
         return chart;
       });
+
+
+
       console.log(pieNew_2);
       nv.addGraph(function() {
         var chart = nv.models.pieChart()
@@ -328,24 +388,85 @@ class Draw{
             .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
             .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
             .donutRatio(0.45)     //Configure how big you want the donut hole size to be.
+            .legendPosition("right")
             ;
+
+          // Insert text into the center of the donut
+          function centerText() {
+            return function() {
+              var svg = d3v3.select("#nvd3_svg_new_2");
+              var donut = svg.selectAll("g.nv-slice").filter(
+                function (d, i) {
+                  return i == 0;
+                }
+              );
+          //Insert text inside donut
+              console.log(donut);
+              donut.insert("text", "g")
+              .text("Total")
+              .attr("class", "middle")
+              .attr("text-anchor", "middle")
+              //.attr("dy", "-.55em")
+              .style("fill", "#000");
+            }
+          }
 
           d3v3.select("#nvd3_svg_new_2")
             .datum(pieNew_2)
             .transition().duration(350)
             .call(chart)
+            .call(centerText())
             ;
 
           // Chart title   
-          d3v3.select("#nvd3_svg_new_2")
-            .append("text")
-            .attr("x", 350)             
-            .attr("y", 350)
-            .attr("text-anchor", "middle")  
-            .text("Fig2. Networking vs Loading+Scripting Statistics");
+          // d3v3.select("#nvd3_svg_new_2")
+          //   .append("text")
+          //   .attr("x", 350)             
+          //   .attr("y", 350)
+          //   .attr("text-anchor", "middle")  
+          //   .text("Fig2. Networking vs Loading+Scripting Statistics");
 
         return chart;
       });
+
+      //Changed below 
+      /************************************************************************************/
+      // Create bar graph
+      nv.addGraph(function() {
+      var chart = nv.models.multiBarChart()
+        //.transitionDuration(350)
+        .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
+        .rotateLabels(0)      //Angle to rotate x-axis labels.
+        .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
+        .groupSpacing(0.1)    //Distance between each group of bars.
+      ;
+
+      chart.xAxis
+          .tickFormat(d3v3.format(',f'));
+
+      chart.yAxis
+          .tickFormat(d3v3.format(',.1f'));
+
+      d3v3.select('#nvd3_svg_new_3')
+          .datum(bar_data) //Need to use all the features
+          .call(chart);
+
+      nv.utils.windowResize(chart.update);
+
+        return chart;
+      });
+
+      function exampleData() {
+        return stream_layers(3,10+Math.random()*100,.1).map(function(data, i) {
+          return {
+            key: 'Stream #' + i,
+            values: data
+          };
+        });
+      }
+      /************************************************************************************/
+      // Changed above
+
 
       var g = new svg(this.d_legacy, 'mySVG');
       g.draw(this.merged);
