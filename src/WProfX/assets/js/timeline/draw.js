@@ -244,7 +244,7 @@ class Draw{
 
   drawGraph() {
 
-      console.log("legacy>>>>>>>>>>",this.data[this.data.length-1]);
+      console.log("legacy>>>>>>>>>>",this.data);
       //criticalPathPieData();
 
 
@@ -372,6 +372,21 @@ class Draw{
           //   .attr("y", 350)
           //   .attr("text-anchor", "middle")  
           //   .text("Fig1. Networking vs Loading vs Scripting critical path Statistics");
+
+        // function updateLegendPosition() {
+        //   svg.selectAll(".nv-series")[0].forEach(function(d, i) {
+        //     d3.select(d).attr("transform", "translate(0," + i * 15 + ")");
+        //   })
+        // }
+        // svg.select('.nv-legend').on("click", function() {
+        //   updateLegendPosition();
+        // });
+
+        // svg.select('.nv-legend').on("dblclick", function() {
+        //   updateLegendPosition();
+        // });
+
+        // updateLegendPosition();
 
         return chart;
       });

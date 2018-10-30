@@ -134,6 +134,7 @@ svg.prototype = {
     init: function() {
       var __svg = d3.select(this.svg);
       var __container = d3.select("#parent");
+      // var __text_container = document.getElementsByClassName("chart-shadow-box");
 
       console.log("width: " +  w + ", " +  margin.left + ", " + margin.right);
       console.log("height: " +  yScale(max + 1) + ", " + margin.top + ", " + margin.bottom);
@@ -143,6 +144,11 @@ svg.prototype = {
       __container.transition().duration(ttime)
             .attr("width", w + margin.top + margin.bottom)
             .attr("height", yScale(max + 1) + margin.top + margin.bottom);
+
+
+      // __text_container.style.height = (yScale(max + 1) + margin.top + margin.bottom).toString() + "px"
+      // __text_container.style.width = (w + margin.top + margin.bottom).toString() + "px"
+
       var __w = w;
       var __h = yScale(max + 1);
       responsivefy(__svg, __w, __h);

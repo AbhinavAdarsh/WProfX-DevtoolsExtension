@@ -89,14 +89,18 @@ class Runner {
     var legendDiv = document.getElementById("legendDiv");
     var svgDiv = document.getElementById("parent");
     if (svgDiv!== null){
-      svgDiv.outerHTML = "";
-      var newDiv = document.createElement("div");
-      newDiv.id="parent";
+      //svgDiv.outerHTML = "";
+      //var newDiv = document.createElement("div");
+      //newDiv.id="parent";
+      var chartSvg = document.getElementById("mySVG");
+      if(chartSvg!=null){
+        chartSvg.remove();
+      }
       var newSvgNode = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       newSvgNode.id = 'mySVG';
       newSvgNode.setAttribute('class', 'svg-container');
-      newDiv.appendChild(newSvgNode);
-      util.insertAfter(newDiv, legendDiv);
+      svgDiv.appendChild(newSvgNode);
+      //util.insertAfter(newDiv, legendDiv);
      //  var mysvg = d3.select("#mySVG")
      //  .call(d3.zoom().on("zoom", function () {
      //    mysvg.attr("transform", d3.event.transform)
