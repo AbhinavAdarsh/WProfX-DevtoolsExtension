@@ -13,6 +13,8 @@ class Draw{
     this.segmentRows = {};
     this.rowMapHash = {};
     this.rowByActivity = {};
+    this.mimeTypeCount = {};
+    this.mimeTypeSize = {};
 
     // document.getElementById('txt1').style.display = "none";
     // document.getElementById('txtLogo').style.display = "none";
@@ -94,24 +96,77 @@ class Draw{
                       if (_this.javascript_type_list.has(mimeType)) {
                           objElem.color = _this.colorMap["djs"];
                           objElem.type = 'js';
+                          if('js' in _this.mimeTypeCount) {
+                            _this.mimeTypeCount['js'] = _this.mimeTypeCount['js']+1;
+                          }
+                          else {
+                            _this.mimeTypeCount['js'] = 1;
+                          }
+                          if('js' in _this.mimeTypeSize) {
+                            _this.mimeTypeSize['js'] = _this.mimeTypeSize['js'] + objElem.transferSize;
+                          }
+                          else {
+                            _this.mimeTypeSize['js'] = objElem.transferSize;
+                          }
+
                           //objElem.descr = "JS Download";
                       } else if (_this.text_type_list.has(mimeType)) {
                           objElem.color = _this.colorMap["dtext"];
                           objElem.type = 'html';
+                          if('html' in _this.mimeTypeCount) { 
+                            _this.mimeTypeCount['html'] = _this.mimeTypeCount['html']+1;
+                          }
+                          else {
+                            _this.mimeTypeCount['html'] = 1;
+                          }
+                          if('html' in _this.mimeTypeSize && objElem.transferSize != null) {
+                            _this.mimeTypeSize['html'] = _this.mimeTypeSize['html'] + objElem.transferSize;
+                            console.log("size = ",objElem.transferSize);
+                          }
+                          else {
+                            _this.mimeTypeSize['html'] = objElem.transferSize;
+                            console.log("size = ",objElem.transferSize);
+                          }
                           //objElem.descr = "Text Download";
                       } else if (_this.css_type_list.has(mimeType)) {
                           objElem.color = _this.colorMap["dcss"];
                           objElem.type = 'css';
+                          if('css' in _this.mimeTypeCount) {
+                            _this.mimeTypeCount['css'] = _this.mimeTypeCount['css']+1;
+                          }
+                          else {
+                            _this.mimeTypeCount['css'] = 1;
+                          }
+                          if('css' in _this.mimeTypeSize) {
+                            _this.mimeTypeSize['css'] = _this.mimeTypeSize['css'] + objElem.transferSize;
+                          }
+                          else {
+                            _this.mimeTypeSize['css'] = objElem.transferSize;
+                          }                          
                           //objElem.descr = "CSS Download";
                       } else if (mimeType.indexOf('/') !== -1 && mimeType.split('/')[0] === "image") {
                           objElem.color = _this.colorMap["dimg"];
                           objElem.type = 'image';
+                          if('image' in _this.mimeTypeCount) {
+                            _this.mimeTypeCount['image'] = _this.mimeTypeCount['image']+1;
+                          }
+                          else {
+                            _this.mimeTypeCount['image'] = 1;
+                          }
+                          if('image' in _this.mimeTypeSize) {
+                            _this.mimeTypeSize['image'] = _this.mimeTypeSize['image'] + objElem.transferSize;
+                          }
+                          else {
+                            _this.mimeTypeSize['image'] = objElem.transferSize;
+                          }                          
                           //objElem.descr = "Image Download";
                       } else if (mimeType.indexOf('/') !== -1) {
                           var _substr = mimeType.split('/');
                           if (_substr.length > 1 && _substr[1].indexOf('font') !== -1 ){
                             objElem.color = _this.colorMap["dfont"];
                             objElem.type = 'font';
+                            if('font' in _this.mimeTypeCount) _this.mimeTypeCount['font'] = _this.mimeTypeCount['font']+1;
+                            else _this.mimeTypeCount['font'] = 1;
                             //objElem.descr = "Font Download";
                           }
                           else {
@@ -244,6 +299,18 @@ class Draw{
 
   drawGraph() {
 
+      console.log("legacy>>>>>>>>>>",this.mimeTypeCount);
+      var mime_data = [{
+        key: "Mime Data",
+        values: []
+      }];
+      for(var mime_type in this.mimeTypeCount){
+        mime_data[0].values.push({
+          "label": mime_type,
+          "value": this.mimeTypeCount[mime_type]
+        });
+      }
+      console.log("mime data >>>>>>>>>>", mime_data);
       console.log("legacy>>>>>>>>>>",this.data);
       //criticalPathPieData();
 
@@ -259,12 +326,20 @@ class Draw{
       });
 
       var pieNew = [];
+      var pie_New_3 = [];
 
       for(var key in pieData){
         var obj = {};
         obj['label'] = key;
         obj['value'] = pieData[key];
         pieNew.push(obj);
+      }
+
+      for(var key in this.mimeTypeSize){
+        var obj = {};
+        obj['label'] = key;
+        obj['value'] = this.mimeTypeSize[key];
+        pie_New_3.push(obj);
       }
 
       //console.log("legacy>>>>>>>>>>",pieNew);
@@ -277,42 +352,18 @@ class Draw{
       //   //console.log("currrrrrrr >>>>>", curr);
       //   pieData_2[objElem.split("_")[0]] += (curr_2[0].endTime-curr_2[0].startTime);
       // });
-      console.log("FOR BAR GRAPH >>>", this.d_legacy);
+
+      //console.log("FOR BAR GRAPH >>>", this.d_legacy['segmentRows']);
       var pieNew_2 = [];
-      pieNew_2.push({'label':'networking', 
+      pieNew_2.push({'label':'Networking', 
                       'value': this.data[this.data.length-1]['networkingTimeCp']
                     });
-      pieNew_2.push({'label':'loading + scripting',
-                      'value': this.data[this.data.length-1]['scriptingTimeCp']+this.data[this.data.length-1]['loadingTimeCp']
+      pieNew_2.push({'label':'Loading',
+                      'value': this.data[this.data.length-1]['loadingTimeCp']
                     });
-      var bar_data = [
-                  {
-                    key: "S1",
-                    color: "#51A351",
-                    values:
-                    [      
-                      { x : 'A', y : 40 },
-                      { x : 'B', y : 30 },
-                      { x : 5,   y : 20 }  
-                    ]
-                  },
-                  {
-                    key: "S2",
-                    color: "#BD362F",
-                    values:
-                    [      
-                      { x : 'A', y : 60 },
-                      { x : 'B', y : 50 },
-                      { x : 5,   y : 70 } 
-                    ]
-                  }
-                ];
-      // for(var key in pieData_2){
-      //   var obj_2 = {};
-      //   obj_2['label'] = key;
-      //   obj_2['value'] = pieData_2[key];
-      //   pieNew_2.push(obj_2);
-      // }
+      pieNew_2.push({'label':'Scripting', 
+                      'value': this.data[this.data.length-1]['scriptingTimeCp']
+                    });
 
       nv.addGraph(function() {
         var chart = nv.models.pieChart()
@@ -444,41 +495,113 @@ class Draw{
         return chart;
       });
 
-      //Changed below 
-      /************************************************************************************/
-      // Create bar graph
+      //************************************************************************************
+      // Third pie chart for size based on mime types
+      console.log("3rd Pie chart data", pie_New_3);
       nv.addGraph(function() {
-      var chart = nv.models.multiBarChart()
-        //.transitionDuration(350)
-        .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
-        .rotateLabels(0)      //Angle to rotate x-axis labels.
-        .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
-        .groupSpacing(0.1)    //Distance between each group of bars.
-      ;
+        var chart = nv.models.pieChart()
+            .x(function(d) { return d.label })
+            .y(function(d) { return d.value })
+            .showLabels(true)
+            .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+            .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+            .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+            .donutRatio(0.45)     //Configure how big you want the donut hole size to be.
+            .legendPosition("right")
+            ;
 
-      chart.xAxis
-          .tickFormat(d3v3.format(',f'));
+          // Insert text into the center of the donut
+          function centerText() {
+            return function() {
+              var svg = d3v3.select("#nvd3_svg_new_4");
+              var donut = svg.selectAll("g.nv-slice").filter(
+                function (d, i) {
+                  return i == 0;
+                }
+              );
+          //Insert text inside donut
+            donut.insert("text", "g")
+            .text("Bytes")
+            .attr("class", "middle")
+            .attr("text-anchor", "middle")
+            .attr("dy", "-.55em")
+            .style("fill", "#000");
 
-      chart.yAxis
-          .tickFormat(d3v3.format(',.1f'));
+            donut.insert("text", "g")
+            .text("Transferred")
+            .attr("class", "middle")
+            .attr("text-anchor", "middle")
+            .attr("dy", ".85em")
+            .style("fill", "#000");
+            }
+          }
 
-      d3v3.select('#nvd3_svg_new_3')
-          .datum(bar_data) //Need to use all the features
-          .call(chart);
-
-      nv.utils.windowResize(chart.update);
+          d3v3.select("#nvd3_svg_new_4")
+            .datum(pie_New_3)
+            .transition().duration(350)
+            .call(chart)
+            .call(centerText())
+            ;
 
         return chart;
       });
 
-      function exampleData() {
-        return stream_layers(3,10+Math.random()*100,.1).map(function(data, i) {
-          return {
-            key: 'Stream #' + i,
-            values: data
-          };
-        });
-      }
+      //Changed below 
+      /************************************************************************************/
+      // Create bar graph
+      // nv.addGraph(function() {
+      // var chart = nv.models.multiBarChart()
+      //   //.transitionDuration(350)
+      //   .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
+      //   .rotateLabels(0)      //Angle to rotate x-axis labels.
+      //   .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
+      //   .groupSpacing(0.1)    //Distance between each group of bars.
+      // ;
+
+      // chart.xAxis
+      //     .tickFormat(d3v3.format(',f'));
+
+      // chart.yAxis
+      //     .tickFormat(d3v3.format(',.1f'));
+
+      // d3v3.select('#nvd3_svg_new_3')
+      //     .datum(mime_data)
+      //     //.datum(bar_data) //Need to use all the features
+      //     .call(chart);
+
+      // nv.utils.windowResize(chart.update);
+
+      //   return chart;
+      // });
+
+      // function exampleData() {
+      //   return stream_layers(3,10+Math.random()*100,.1).map(function(data, i) {
+      //     return {
+      //       key: 'Stream #' + i,
+      //       values: data
+      //     };
+      //   });
+      // }
+      nv.addGraph(function() {
+        var chart = nv.models.discreteBarChart()
+            .x(function(d) { return d.label })    //Specify the data accessors.
+            .y(function(d) { return d.value })
+            .staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
+            .tooltips(false)        //Don't show tooltips
+            .showValues(true);       //...instead, show the bar value right on top of each bar.
+            // .transitionDuration(350)
+
+        d3v3.select('#nvd3_svg_new_3')
+            .datum(mime_data)
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
+      });
+
+
+
       /************************************************************************************/
       // Changed above
 
@@ -491,6 +614,23 @@ class Draw{
       var _mySVG = document.getElementById("mySVG");
       _mySVG.addEventListener('dblclick', (event) => g.mergeToggleHandler(event));
 
+
+      var networkTab = document.getElementById("networkingChartTab");//.onclick = function() {changeClasses()};
+      console.log(networkTab);
+      networkTab.addEventListener('click', (event) => changeClasses());
+      function changeClasses() {
+          document.getElementById("networkingChartDIV").style.visibility = "visible";
+          document.getElementById("summaryChartDIV").style.visibility = "hidden";
+      }
+
+      var summaryTab = document.getElementById("summaryChartTab");//.onclick = function() {changeClassesSummary()};
+      console.log(summaryTab);
+      summaryTab.addEventListener('click', (event) => changeClassesSummary());
+
+      function changeClassesSummary() {
+          document.getElementById("networkingChartDIV").style.visibility = "hidden";
+          document.getElementById("summaryChartDIV").style.visibility = "visible";
+      }
 
   }
 }

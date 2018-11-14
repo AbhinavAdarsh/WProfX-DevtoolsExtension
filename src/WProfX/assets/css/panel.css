@@ -1367,6 +1367,11 @@ iframe.panel.extension {
     height: 100%;
 }
 
+.pieChart.networking{
+    visibility: hidden;
+}
+
+
 .chart-shadow-box{
     position: absolute;
     width: 100%;
