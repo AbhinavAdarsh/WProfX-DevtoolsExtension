@@ -119,13 +119,15 @@ class Draw{
                           else {
                             _this.mimeTypeCount['html'] = 1;
                           }
-                          if('html' in _this.mimeTypeSize && objElem.transferSize != null) {
-                            _this.mimeTypeSize['html'] = _this.mimeTypeSize['html'] + objElem.transferSize;
-                            console.log("size = ",objElem.transferSize);
+                          if('html' in _this.mimeTypeSize) {
+                            if(objElem.transferSize != undefined) {
+                              _this.mimeTypeSize['html'] = _this.mimeTypeSize['html'] + objElem.transferSize;
+                              console.log("size = ",objElem.transferSize);
+                            }
                           }
                           else {
                             _this.mimeTypeSize['html'] = objElem.transferSize;
-                            console.log("size = ",objElem.transferSize);
+                            console.log("first size = ",objElem.transferSize);
                           }
                           //objElem.descr = "Text Download";
                       } else if (_this.css_type_list.has(mimeType)) {
