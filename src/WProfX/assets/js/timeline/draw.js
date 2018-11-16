@@ -167,8 +167,18 @@ class Draw{
                           if (_substr.length > 1 && _substr[1].indexOf('font') !== -1 ){
                             objElem.color = _this.colorMap["dfont"];
                             objElem.type = 'font';
-                            if('font' in _this.mimeTypeCount) _this.mimeTypeCount['font'] = _this.mimeTypeCount['font']+1;
-                            else _this.mimeTypeCount['font'] = 1;
+                            if('font' in _this.mimeTypeCount) {
+                              _this.mimeTypeCount['font'] = _this.mimeTypeCount['font']+1;
+                            } 
+                            else {
+                              _this.mimeTypeCount['font'] = 1;
+                            }
+                            if('font' in _this.mimeTypeSize) {
+                              _this.mimeTypeSize['font'] = _this.mimeTypeSize['font'] + objElem.transferSize;
+                            } 
+                            else {
+                              _this.mimeTypeSize['font'] = objElem.transferSize;
+                            }                            
                             //objElem.descr = "Font Download";
                           }
                           else {
@@ -500,11 +510,19 @@ class Draw{
       //************************************************************************************
       // Third pie chart for size based on mime types
       console.log("3rd Pie chart data", pie_New_3);
+      // var pie_chart_3_colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"];
+      // d3v3.scale.myColors = function() {
+      //   return d3.scale.ordinal().range(myColors);
+      // };
+
       nv.addGraph(function() {
         var chart = nv.models.pieChart()
             .x(function(d) { return d.label })
             .y(function(d) { return d.value })
             .showLabels(true)
+            .color(["#a8c5f7", "#8ae887", "#e8ae61", "#c79efa"]) // html, css, js, image
+            //.color(['blue', 'green', 'yellow', 'red'])
+            //.color(d3v3.scale.myColors().range())
             .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
             .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
             .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
@@ -551,44 +569,12 @@ class Draw{
       //Changed below 
       /************************************************************************************/
       // Create bar graph
-      // nv.addGraph(function() {
-      // var chart = nv.models.multiBarChart()
-      //   //.transitionDuration(350)
-      //   .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
-      //   .rotateLabels(0)      //Angle to rotate x-axis labels.
-      //   .showControls(true)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
-      //   .groupSpacing(0.1)    //Distance between each group of bars.
-      // ;
-
-      // chart.xAxis
-      //     .tickFormat(d3v3.format(',f'));
-
-      // chart.yAxis
-      //     .tickFormat(d3v3.format(',.1f'));
-
-      // d3v3.select('#nvd3_svg_new_3')
-      //     .datum(mime_data)
-      //     //.datum(bar_data) //Need to use all the features
-      //     .call(chart);
-
-      // nv.utils.windowResize(chart.update);
-
-      //   return chart;
-      // });
-
-      // function exampleData() {
-      //   return stream_layers(3,10+Math.random()*100,.1).map(function(data, i) {
-      //     return {
-      //       key: 'Stream #' + i,
-      //       values: data
-      //     };
-      //   });
-      // }
       nv.addGraph(function() {
         var chart = nv.models.discreteBarChart()
             .x(function(d) { return d.label })    //Specify the data accessors.
             .y(function(d) { return d.value })
             .staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
+            .color(["#a8c5f7", "#8ae887", "#e8ae61", "#c79efa"]) // html, css, js, image
             .tooltips(false)        //Don't show tooltips
             .showValues(true);       //...instead, show the bar value right on top of each bar.
             // .transitionDuration(350)
@@ -596,6 +582,14 @@ class Draw{
         d3v3.select('#nvd3_svg_new_3')
             .datum(mime_data)
             .call(chart);
+
+        // Chart title   
+        d3v3.select("#nvd3_svg_new_3")
+          .append("text")
+          .attr("x", 170)             
+          .attr("y", 170)
+          .attr("text-anchor", "middle")  
+          .text("Fig. Count of network objects by type");
 
         nv.utils.windowResize(chart.update);
 
@@ -617,13 +611,13 @@ class Draw{
       _mySVG.addEventListener('dblclick', (event) => g.mergeToggleHandler(event));
 
 
-      var networkTab = document.getElementById("networkingChartTab");//.onclick = function() {changeClasses()};
-      console.log(networkTab);
-      networkTab.addEventListener('click', (event) => changeClasses());
-      function changeClasses() {
-          document.getElementById("networkingChartDIV").style.visibility = "visible";
-          document.getElementById("summaryChartDIV").style.visibility = "hidden";
-      }
+      // var networkTab = document.getElementById("networkingChartTab");//.onclick = function() {changeClasses()};
+      // console.log(networkTab);
+      // networkTab.addEventListener('click', (event) => changeClasses());
+      // function changeClasses() {
+      //     document.getElementById("networkingChartDIV").style.visibility = "visible";
+      //     document.getElementById("summaryChartDIV").style.visibility = "hidden";
+      // }
 
       var summaryTab = document.getElementById("summaryChartTab");//.onclick = function() {changeClassesSummary()};
       console.log(summaryTab);
