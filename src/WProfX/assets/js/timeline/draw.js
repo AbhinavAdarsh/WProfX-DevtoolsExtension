@@ -622,11 +622,22 @@ class Draw{
       var summaryTab = document.getElementById("summaryChartTab");//.onclick = function() {changeClassesSummary()};
       console.log(summaryTab);
       summaryTab.addEventListener('click', (event) => changeClassesSummary());
+      // var child = document.getElementsByClassName("chart-shadow-box");
+      // setTimeout(function(){
+      //   child[0].style.height = document.getElementById("parent").style.height;
+      // }, 3000);
+      
 
-      function changeClassesSummary() {
-          document.getElementById("networkingChartDIV").style.visibility = "hidden";
-          document.getElementById("summaryChartDIV").style.visibility = "visible";
-      }
+      setTimeout(function(){
+        var par = document.getElementById("parent");
+        var child = document.getElementsByClassName("chart-shadow-box");
+        par.removeChild(child[0]);
+      }, 3000);
+
+      // function changeClassesSummary() {
+      //     document.getElementById("networkingChartDIV").style.visibility = "hidden";
+      //     document.getElementById("summaryChartDIV").style.visibility = "visible";
+      // }
 
   }
 }
